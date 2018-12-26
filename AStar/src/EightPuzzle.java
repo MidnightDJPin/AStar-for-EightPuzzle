@@ -1,4 +1,6 @@
-
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class EightPuzzle implements Comparable<EightPuzzle>{
 	private int[] nums;
@@ -14,7 +16,7 @@ public class EightPuzzle implements Comparable<EightPuzzle>{
 		}
 		g = 0;
 		parent = null;
-		h = computeHFromTarget();
+		computeHFromTarget();
 		f = g + h;
 	}
 	public EightPuzzle(EightPuzzle EP) {
@@ -30,13 +32,19 @@ public class EightPuzzle implements Comparable<EightPuzzle>{
 	
 	public boolean matchTarget() {
 		int[] target = {1,2,3,4,5,6,7,8,0};
-		for (int i = 0; i < 9; i++) {
-			if (nums[i] != target[i]) return false;
-		}
-		return true;
+		return Arrays.equals(target, nums);
 	}
 	
-	public int computeHFromTarget() {
+	public int isContains(ArrayList<EightPuzzle> open) {
+		for (int i = 0; i < open.size(); i++) {
+			if (Arrays.equals(nums, open.get(i).nums)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	public void computeHFromTarget() {
 		int total = 0;
 		for (int i = 0; i < 9; i++) {
 			int xi = i % 3;
@@ -50,7 +58,7 @@ public class EightPuzzle implements Comparable<EightPuzzle>{
 				total += (Math.abs(xi - 2) +Math.abs(yi - 2));
 			}
 		}
-		return total;
+		h = total;
 	}
 	
 	public boolean movable(Direction dir) {
@@ -101,6 +109,16 @@ public class EightPuzzle implements Comparable<EightPuzzle>{
 		return true;
 	}
 	
+	public ArrayList<EightPuzzle> generateRoute() {
+		EightPuzzle temp = this;
+		ArrayList<EightPuzzle> route = new ArrayList<>();
+		while (temp != null) {
+			route.add(temp);
+			temp = temp.parent;
+		}
+		return route;
+	}
+	
 	public void print() {
 		System.out.println("[" + nums[0] + "," + nums[1] + "," + nums[2] + ",\n"
 						 + " " + nums[3] + "," + nums[4] + "," + nums[5] + ",\n"
@@ -119,16 +137,16 @@ public class EightPuzzle implements Comparable<EightPuzzle>{
 		return g;
 	}
 
-	public void setG(int g) {
-		this.g = g;
+	public void setG() {
+		g += 1;
 	}
 
 	public int getF() {
 		return f;
 	}
 
-	public void setF(int f) {
-		this.f = f;
+	public void setF() {
+		f = g + h;
 	}
 
 	public int getH() {
