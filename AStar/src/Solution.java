@@ -4,12 +4,18 @@ import java.util.Random;
 
 
 public class Solution {
-	private static ArrayList<EightPuzzle> open = new ArrayList<>();
-	private static ArrayList<EightPuzzle> close = new ArrayList<>();
-	private static ArrayList<EightPuzzle> result;
-	private static EightPuzzle start;
+	private ArrayList<EightPuzzle> open = new ArrayList<>();
+	private ArrayList<EightPuzzle> close = new ArrayList<>();
+	private ArrayList<EightPuzzle> result;
+	private EightPuzzle start;
+	
+	public Solution() {}
 
-	private static void createEightPuzzle() {
+	public EightPuzzle createEightPuzzle() {
+		open.clear();
+		close.clear();
+		result = null;
+		start = null;
 		int[] init = {1,2,3,4,5,6,7,8,0};
 		start = new EightPuzzle(init);
 		int step = 0;
@@ -30,11 +36,14 @@ public class Solution {
 				step++;
 			}
 		}
-		System.out.println("打乱后的初始状态为：");
-		start.print();
+		return start;
 	}
 	
-	private static void nodeOperation(EightPuzzle opEightPuzzle) {
+	public EightPuzzle getStart() {
+		return start;
+	}
+	
+	private void nodeOperation(EightPuzzle opEightPuzzle) {
 		opEightPuzzle.computeHFromTarget();
 		opEightPuzzle.setG();
 		opEightPuzzle.setF();
@@ -51,49 +60,50 @@ public class Solution {
 		}
 	}
 	
-	private static void printRoute() {
+	public ArrayList<EightPuzzle> startSolve() {
+		if (open.isEmpty()) {
+			open.add(start);
+		}
+		return open;
+	}
+	
+	public ArrayList<EightPuzzle> getBestNode() {
+		EightPuzzle best = open.get(0);
+		open.remove(0);
+		close.add(best);
+		for (int i = 0; i < 4; i++) {
+			Direction dir = Direction.values()[i];
+			if (best.movable(dir)) {
+				EightPuzzle opEightPuzzle = new EightPuzzle(best);
+				opEightPuzzle.move(dir);
+				opEightPuzzle.setParent(best);
+				nodeOperation(opEightPuzzle);
+			}
+		}
+		Collections.sort(open);
+		return open;
+	}
+	
+	
+	private void getRoute() {
+		
 		int size = result.size();
 		System.out.println("共经过"+ (size - 1) +"步求得解");
 		for (int i = size - 1; i >= 0; i--) {
 			System.out.println("step:" + (size - i - 1));
 			result.get(i).print();
-			/*try {
-				Thread.sleep(3500);
-			} catch (Exception e) {
-				// TODO: handle exception
-				e.printStackTrace();
-			}*/
 		}
 	}
 	
-	public static void main(String[] args) {
-		createEightPuzzle();
+	/*public void main(String[] args) {
 		open.add(start);
 		boolean soluted = false;
 		while (!open.isEmpty()) {
 			Collections.sort(open);
-			EightPuzzle best = open.get(0);
-			open.remove(0);
-			close.add(best);
-			if (best.matchTarget()) {
-				result = best.generateRoute();
-				printRoute();
-				soluted = true;
-				break;
-			}
-			for (int i = 0; i < 4; i++) {
-				Direction dir = Direction.values()[i];
-				if (best.movable(dir)) {
-					EightPuzzle opEightPuzzle = new EightPuzzle(best);
-					opEightPuzzle.move(dir);
-					opEightPuzzle.setParent(best);
-					nodeOperation(opEightPuzzle);
-				}
-			}
-		}
+			
 		if (!soluted) {
 			System.out.println("求解失败!");
 		}
 	}
-
+*/
 }

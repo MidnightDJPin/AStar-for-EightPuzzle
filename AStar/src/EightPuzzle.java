@@ -119,10 +119,16 @@ public class EightPuzzle implements Comparable<EightPuzzle>{
 		return route;
 	}
 	
-	public void print() {
-		System.out.println("[" + nums[0] + "," + nums[1] + "," + nums[2] + ",\n"
-						 + " " + nums[3] + "," + nums[4] + "," + nums[5] + ",\n"
-						 + " " + nums[6] + "," + nums[7] + "," + nums[8] + "]");
+	public String printNums() {
+		String toString = new String("");
+		System.out.print("[");
+		for (int i = 0; i < 9; i++) {
+			if (i < 8) {
+				System.out.print(nums[i] + ",");
+			} else {
+				System.out.println(nums[i] + "]");
+			}
+		}
 	}
 
 	public int[] getNums() {
