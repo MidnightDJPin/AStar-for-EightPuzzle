@@ -8,6 +8,7 @@ import java.awt.event.WindowListener;
 import java.util.ArrayList;
 
 import javax.swing.UIManager;
+import javax.swing.text.StyledEditorKit.ForegroundAction;
 
 
 public class EightPuzzleFrame extends Frame implements ActionListener, KeyListener {
@@ -17,9 +18,10 @@ public class EightPuzzleFrame extends Frame implements ActionListener, KeyListen
 	
 	MenuBar menubar=new MenuBar();
 	Menu menu_file = new Menu("操作");
-	MenuItem start = new MenuItem("生成8数码");
+	MenuItem start = new MenuItem("新生成8数码");
+	MenuItem restart = new MenuItem("重置");
 	MenuItem solve = new MenuItem("求解");
-	MenuItem printPath = new MenuItem("生成路径");
+	MenuItem printPath = new MenuItem("还原");
 	MenuItem exit = new MenuItem("退出");
 	Button[] button;
 	TextArea textArea;
@@ -36,11 +38,13 @@ public class EightPuzzleFrame extends Frame implements ActionListener, KeyListen
 		}
 		
 		start.addActionListener(this);
+		restart.addActionListener(this);
 		solve.addActionListener(this);
 		printPath.addActionListener(this);
 		exit.addActionListener(this);
 		
 		menu_file.add(start);
+		menu_file.add(restart);
 		menu_file.add(solve);
 		menu_file.add(printPath);
 		menu_file.add(exit);
@@ -55,8 +59,6 @@ public class EightPuzzleFrame extends Frame implements ActionListener, KeyListen
 				button[i] = new Button("" + (i + 1));
 			}
 			button[i].setFont(new Font("Courier", 1, 20));
-			button[i].addActionListener(this);
-			button[i].addKeyListener(this);
 			panel.add(button[i]);
 		}
 		
@@ -113,11 +115,14 @@ public class EightPuzzleFrame extends Frame implements ActionListener, KeyListen
 				if (puzzle[i] == 0) button[i].setLabel(" ");
 				else button[i].setLabel(puzzle[i] +"");
 			}
+		} else if (e.getSource() == restart) {
+			
 		} else if (e.getSource() == solve) {
+			textArea.setText("");
 			ArrayList<EightPuzzle> solveList;
 			solveList = solution.startSolve();
-			String log = "正在求解，当前open表节点数：" + solveList.size() 
-			+ "， 评估值最小节点为：" + solveList.get(0).getNums().toString() + "\n";
+			String log = "当前open表节点数：" + solveList.size() 
+			+ "， 评估值最小节点为：" + solveList.get(0).toString() + "\n";
 			textArea.append(log);
 			while (!solveList.isEmpty()) {
 				solveList = solution.getBestNode();
@@ -126,12 +131,28 @@ public class EightPuzzleFrame extends Frame implements ActionListener, KeyListen
 					textArea.append("求解完成！\n");
 					break;
 				} else {
-					log = "正在求解，当前open表节点数：" + solveList.size() 
-					+ "， 评估值最小节点为：" + Array + "\n";
+					log = "当前open表节点数：" + solveList.size() 
+					+ "， 评估值最小节点为：" + solveList.get(0).toString() + "\n";
 					textArea.append(log);
 				}
-				
 			}
+		} else if (e.getSource() == printPath && resultNode != null) {
+			ArrayList<EightPuzzle> path = resultNode.generateRoute();
+			for (int i = path.size() - 1; i >= 0; i--) {
+				try {
+					Thread.sleep(1200);
+				} catch (Exception exc) {
+					exc.printStackTrace();
+				}
+				textArea.append(path.get(i).toString() + "\n");
+				int[] puzzle = path.get(i).getNums();
+				for (int j = 0; j < 9; j++) {
+					if (puzzle[j] == 0) button[j].setLabel(" ");
+					else button[j].setLabel(puzzle[j] +"");
+				}
+			}
+		} else if (e.getSource() == exit) {
+			System.exit(0);
 		}
 	}
 	

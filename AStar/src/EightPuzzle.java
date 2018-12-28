@@ -44,18 +44,28 @@ public class EightPuzzle implements Comparable<EightPuzzle>{
 		return -1;
 	}
 	
-	public void computeHFromTarget() {
+	public void computeHFromTarget(int flag) {
 		int total = 0;
-		for (int i = 0; i < 9; i++) {
-			int xi = i % 3;
-			int yi = i / 3;
-			if (nums[i] != 0) {
-				int target = nums[i] - 1;
-				int xt = target % 3;
-				int yt = target / 3;
-				total += (Math.abs(xi - xt) + Math.abs(yi - yt));
-			} else {
-				total += (Math.abs(xi - 2) +Math.abs(yi - 2));
+		if (flag == 0) {
+			for (int i = 0; i < 9; i++) {
+				int xi = i % 3;
+				int yi = i / 3;
+				if (nums[i] != 0) {
+					int target = nums[i] - 1;
+					int xt = target % 3;
+					int yt = target / 3;
+					total += (Math.abs(xi - xt) + Math.abs(yi - yt));
+				} else {
+					total += (Math.abs(xi - 2) +Math.abs(yi - 2));
+				}
+			}
+		} else {
+			for (int i = 0; i < 9; i++) {
+				if (nums[i] != 0 && nums[i] != i + 1) {
+					total++;
+				} else if (nums[i] == 0 && i != 8) {
+					total++;
+				}
 			}
 		}
 		h = total;
@@ -119,16 +129,12 @@ public class EightPuzzle implements Comparable<EightPuzzle>{
 		return route;
 	}
 	
-	public String printNums() {
-		String toString = new String("");
-		System.out.print("[");
-		for (int i = 0; i < 9; i++) {
-			if (i < 8) {
-				System.out.print(nums[i] + ",");
-			} else {
-				System.out.println(nums[i] + "]");
-			}
-		}
+	@Override
+	public String toString() {
+		return "["+nums[0]+","+nums[1]+","+nums[2]+","
+				+nums[3]+","+nums[4]+","+nums[5]+","
+				+nums[6]+","+nums[7]+","+nums[8]+"], "
+				+ "f="+f+", "+"g="+g+", "+"h="+h;
 	}
 
 	public int[] getNums() {

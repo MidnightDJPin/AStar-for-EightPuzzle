@@ -36,6 +36,8 @@ public class Solution {
 				step++;
 			}
 		}
+		start.computeHFromTarget();
+		start.setF();
 		return start;
 	}
 	
@@ -85,7 +87,7 @@ public class Solution {
 	}
 	
 	
-	private void getRoute() {
+	/*private void getRoute() {
 		
 		int size = result.size();
 		System.out.println("共经过"+ (size - 1) +"步求得解");
@@ -94,7 +96,7 @@ public class Solution {
 			result.get(i).print();
 		}
 	}
-	
+	*/
 	/*public void main(String[] args) {
 		open.add(start);
 		boolean soluted = false;
