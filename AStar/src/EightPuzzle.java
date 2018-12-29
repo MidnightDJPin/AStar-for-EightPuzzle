@@ -16,7 +16,7 @@ public class EightPuzzle implements Comparable<EightPuzzle>{
 		}
 		g = 0;
 		parent = null;
-		computeHFromTarget();
+		computeHFromTarget(0);
 		f = g + h;
 	}
 	public EightPuzzle(EightPuzzle EP) {
@@ -46,7 +46,39 @@ public class EightPuzzle implements Comparable<EightPuzzle>{
 	
 	public void computeHFromTarget(int flag) {
 		int total = 0;
-		if (flag == 0) {
+		switch (flag % 4) {
+		case 0:
+			for (int i = 0; i < 9; i++) {
+				if (nums[i] != 0 && nums[i] != i + 1) {
+					total++;
+				}
+			}
+			break;
+		case 1:
+			for (int i = 0; i < 9; i++) {
+				int xi = i % 3;
+				int yi = i / 3;
+				if (nums[i] != 0) {
+					int target = nums[i] - 1;
+					int xt = target % 3;
+					int yt = target / 3;
+					total += (Math.abs(xi - xt) + Math.abs(yi - yt));
+				} /*else {
+					total += (Math.abs(xi - 2) +Math.abs(yi - 2));
+				}*/
+			}
+			break;
+		case 2:
+			for (int i = 0; i < 9; i++) {
+				if (nums[i] != 0 && nums[i] != i + 1) {
+					total++;
+				}
+				else if (nums[i] == 0 && i != 8) {
+					total++;
+				}
+			}
+			break;
+		case 3:
 			for (int i = 0; i < 9; i++) {
 				int xi = i % 3;
 				int yi = i / 3;
@@ -59,15 +91,11 @@ public class EightPuzzle implements Comparable<EightPuzzle>{
 					total += (Math.abs(xi - 2) +Math.abs(yi - 2));
 				}
 			}
-		} else {
-			for (int i = 0; i < 9; i++) {
-				if (nums[i] != 0 && nums[i] != i + 1) {
-					total++;
-				} else if (nums[i] == 0 && i != 8) {
-					total++;
-				}
-			}
+			break;
+		default:
+			break;
 		}
+		
 		h = total;
 	}
 	

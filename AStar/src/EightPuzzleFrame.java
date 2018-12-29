@@ -116,13 +116,19 @@ public class EightPuzzleFrame extends Frame implements ActionListener, KeyListen
 				else button[i].setLabel(puzzle[i] +"");
 			}
 		} else if (e.getSource() == restart) {
-			
+			resultNode = null;
+			solution.restar();
+			int[] puzzle = solution.getStart().getNums();
+			for (int i = 0; i < 9; i++) {
+				if (puzzle[i] == 0) button[i].setLabel(" ");
+				else button[i].setLabel(puzzle[i] +"");
+			}
 		} else if (e.getSource() == solve) {
 			textArea.setText("");
 			ArrayList<EightPuzzle> solveList;
 			solveList = solution.startSolve();
-			String log = "当前open表节点数：" + solveList.size() 
-			+ "， 评估值最小节点为：" + solveList.get(0).toString() + "\n";
+			String log = "open表节点数：" + solveList.size() 
+			+ "， f最小节点为：" + solveList.get(0).toString() + "\n";
 			textArea.append(log);
 			while (!solveList.isEmpty()) {
 				solveList = solution.getBestNode();
@@ -131,8 +137,8 @@ public class EightPuzzleFrame extends Frame implements ActionListener, KeyListen
 					textArea.append("求解完成！\n");
 					break;
 				} else {
-					log = "当前open表节点数：" + solveList.size() 
-					+ "， 评估值最小节点为：" + solveList.get(0).toString() + "\n";
+					log = "open表节点数：" + solveList.size() 
+					+ "， f最小节点为：" + solveList.get(0).toString() + "\n";
 					textArea.append(log);
 				}
 			}
@@ -140,7 +146,7 @@ public class EightPuzzleFrame extends Frame implements ActionListener, KeyListen
 			ArrayList<EightPuzzle> path = resultNode.generateRoute();
 			for (int i = path.size() - 1; i >= 0; i--) {
 				try {
-					Thread.sleep(1200);
+					Thread.sleep(600);
 				} catch (Exception exc) {
 					exc.printStackTrace();
 				}

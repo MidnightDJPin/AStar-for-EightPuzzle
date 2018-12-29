@@ -6,15 +6,26 @@ import java.util.Random;
 public class Solution {
 	private ArrayList<EightPuzzle> open = new ArrayList<>();
 	private ArrayList<EightPuzzle> close = new ArrayList<>();
-	private ArrayList<EightPuzzle> result;
+	//private ArrayList<EightPuzzle> result;
 	private EightPuzzle start;
+	private int algo;
 	
-	public Solution() {}
+	public Solution() {
+		algo = 0;
+	}
 
+	public void restar() {
+		open.clear();
+		close.clear();
+		algo++;
+		start.computeHFromTarget(algo);
+		start.setF();
+		//result = null;
+	}
 	public EightPuzzle createEightPuzzle() {
 		open.clear();
 		close.clear();
-		result = null;
+		//result = null;
 		start = null;
 		int[] init = {1,2,3,4,5,6,7,8,0};
 		start = new EightPuzzle(init);
@@ -36,7 +47,7 @@ public class Solution {
 				step++;
 			}
 		}
-		start.computeHFromTarget();
+		start.computeHFromTarget(algo);
 		start.setF();
 		return start;
 	}
@@ -46,7 +57,7 @@ public class Solution {
 	}
 	
 	private void nodeOperation(EightPuzzle opEightPuzzle) {
-		opEightPuzzle.computeHFromTarget();
+		opEightPuzzle.computeHFromTarget(algo);
 		opEightPuzzle.setG();
 		opEightPuzzle.setF();
 		if (opEightPuzzle.isContains(close) == -1) {
